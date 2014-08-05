@@ -9,7 +9,6 @@ from workflow import Workflow
 
 def get_documents(query):
     """
-
     Retrieve documents from api.anyfetch.com
 
     Returns a list of document dictionaries.
@@ -22,14 +21,8 @@ def get_documents(query):
     # Parse the JSON returned by pinboard and extract the posts
     return r.json()
 
+
 def main(wf):
-    # The Workflow instance will be passed to the function
-    # you call from `Workflow.run`
-    # Your imports here if you want to catch import errors
-    # or if the modules/packages are in a directory added via `Workflow(libraries=...)`
-    # import somemodule
-    # import anothermodule
-    # Get args from Workflow, already in normalised Unicode
     args = wf.args
     query = args[0]
 
@@ -39,7 +32,9 @@ def main(wf):
 
     # Add items to Alfred feedback
     if len(documents) == 0:
-        wf.add_item('No results', 'We could not fetch any document for \'' + query + '\'')
+        title = 'No results'
+        subtitle = 'We could not fetch any document for \'' + query + '\''
+        wf.add_item(title, subtitle)
     else:
         for document in documents:
             type = document['document_type']['name'].capitalize()
@@ -54,8 +49,10 @@ def main(wf):
             elif document['data'].get('name'):
                 title = document['data']['name']
 
+            subtitle = type+' from '+provider
+
             wf.add_item(title=title,
-                        subtitle=type+' from '+provider,
+                        subtitle=subtitle,
                         arg=document['identifier'],
                         valid=True,
                         icon='./icon.png')
