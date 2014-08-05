@@ -6,6 +6,19 @@ import sys
 from workflow import Workflow, web
 import requests
 
+def get_documents():
+    """Retrieve documents from api.anyfetch.com
+
+    Returns a list of document dictionaries.
+
+    """
+    url = 'https://api.anyfetch.com/documents'
+    r = requests.get('https://api.anyfetch.com/documents', auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+
+    # Parse the JSON returned by pinboard and extract the posts
+    result = r.json()
+    documents = result['data']
+    return documents
 
 def main(wf):
     # The Workflow instance will be passed to the function
@@ -17,10 +30,7 @@ def main(wf):
     # Get args from Workflow, already in normalised Unicode
     args = wf.args
 
-    # Do stuff here ...
-
-    r = requests.get('https://api.anyfetch.com/documents', auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
-    documents = r.json()['data']
+    documents = get_documents();
 
     # Add items to Alfred feedback
     for document in documents:
