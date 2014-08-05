@@ -3,7 +3,6 @@
 
 import sys
 import requests
-import pystache
 
 from workflow import Workflow
 
@@ -15,8 +14,9 @@ def get_documents(query):
     Returns a list of document dictionaries.
 
     """
-    url = 'https://api.anyfetch.com/documents'
-    r = requests.get('https://api.anyfetch.com/documents?search=' + query, auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+
+    r = requests.get('https://api.anyfetch.com/documents?search=' + query,
+        auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     # Parse the JSON returned by pinboard and extract the posts
     return r.json()
@@ -32,7 +32,7 @@ def main(wf):
     args = wf.args
     query = args[0]
 
-    json = wf.cached_data(query, lambda: get_documents(query), max_age=600);
+    json = wf.cached_data(query, lambda: get_documents(query), max_age=600)
 
     documents = json['data']
 
@@ -54,7 +54,7 @@ def main(wf):
                 title = document['data']['name']
 
             wf.add_item(title=title,
-                        subtitle= type + ' from ' + provider,
+                        subtitle=type+' from '+provider,
                         arg=document['identifier'],
                         valid=True,
                         icon='./icon.png')
