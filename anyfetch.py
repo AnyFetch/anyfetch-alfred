@@ -32,7 +32,7 @@ def main(wf):
     # Add items to Alfred feedback
     if len(documents) == 0:
         title = 'No results'
-        subtitle = 'We could not fetch any document for \'' + query + '\''
+        subtitle = 'We could not fetch any document for \'{0}\''.format(query)
         wf.add_item(title, subtitle)
     else:
         for document in documents:
@@ -48,7 +48,7 @@ def main(wf):
             elif document['data'].get('name'):
                 title = document['data']['name']
 
-            subtitle = type+' from '+provider
+            subtitle = '{0} from {1}'.format(type, provider)
 
             wf.add_item(title=title,
                         subtitle=subtitle,
