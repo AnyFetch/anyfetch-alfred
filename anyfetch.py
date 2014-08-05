@@ -6,6 +6,7 @@ import requests
 
 from workflow import Workflow
 
+
 def get_documents(query):
     """
 
@@ -16,7 +17,7 @@ def get_documents(query):
     """
 
     r = requests.get('https://api.anyfetch.com/documents?search=' + query,
-        auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+                     auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     # Parse the JSON returned by pinboard and extract the posts
     return r.json()
