@@ -2,13 +2,15 @@
 # encoding: utf-8
 
 import sys
+import requests
+import pystache
 
 from workflow import Workflow
-import requests
-
 
 def get_documents(query):
-    """Retrieve documents from api.anyfetch.com
+    """
+
+    Retrieve documents from api.anyfetch.com
 
     Returns a list of document dictionaries.
 
@@ -17,9 +19,7 @@ def get_documents(query):
     r = requests.get('https://api.anyfetch.com/documents?search=' + query, auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     # Parse the JSON returned by pinboard and extract the posts
-    result = r.json()
-    documents = result['data']
-    return documents
+    return r.json()
 
 def main(wf):
     # The Workflow instance will be passed to the function
@@ -32,9 +32,9 @@ def main(wf):
     args = wf.args
     query = args[0]
 
-    documents = wf.cached_data(query, lambda: get_documents(query), max_age=600);
+    json = wf.cached_data(query, lambda: get_documents(query), max_age=600);
 
-
+    documents = json['data']
 
     # Add items to Alfred feedback
     if len(documents) == 0:
@@ -43,16 +43,24 @@ def main(wf):
         for document in documents:
             type = document['document_type']['name'].capitalize()
             provider = document['provider']['client']['name']
-            wf.add_item(title=document['_type'],
-                             subtitle= type + ' from ' + provider,
-                             arg=document['identifier'],
-                             valid=True,
-                             icon='./icon.png')
 
+            # TODO: rendered_title
+            title = 'Unknown'
+            if document['data'].get('title') is not None:
+                title = document['data']['title']
+            elif document['data'].get('subject'):
+                title = document['data']['subject']
+            elif document['data'].get('name'):
+                title = document['data']['name']
+
+            wf.add_item(title=title,
+                        subtitle= type + ' from ' + provider,
+                        arg=document['identifier'],
+                        valid=True,
+                        icon='./icon.png')
 
     # Send output to Alfred
     wf.send_feedback()
-
 
 if __name__ == '__main__':
     wf = Workflow()
