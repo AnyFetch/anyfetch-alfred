@@ -18,7 +18,6 @@ def get_documents(query):
     r = requests.get('https://api.anyfetch.com/documents?search=' + query,
                      auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
-    # Parse the JSON returned by pinboard and extract the posts
     return r.json()
 
 
