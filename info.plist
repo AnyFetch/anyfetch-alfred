@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>anyfetch</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict/>
+	<key>createdby</key>
+	<string>Tanguy Hélesbeux</string>
+	<key>description</key>
+	<string></string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>AnyFetch</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>65</integer>
+				<key>keyword</key>
+				<string>fetch</string>
+				<key>runningsubtext</key>
+				<string>Fetching documents...</string>
+				<key>script</key>
+				<string>./anyfetch.py {query}</string>
+				<key>subtext</key>
+				<string>Find any document with AnyFetch</string>
+				<key>title</key>
+				<string>AnyFetch</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>2873B983-23FE-4EEA-86B9-3F33D684C24E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>2873B983-23FE-4EEA-86B9-3F33D684C24E</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
+	</dict>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
