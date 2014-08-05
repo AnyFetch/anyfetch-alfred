@@ -4,6 +4,7 @@
 import sys
 
 from workflow import Workflow, web
+from requests import Requests
 
 
 def main(wf):
