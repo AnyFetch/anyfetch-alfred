@@ -6,14 +6,16 @@ import sys
 from workflow import Workflow
 import requests
 
-def get_documents(search):
+QUERY = ''
+
+def get_documents():
     """Retrieve documents from api.anyfetch.com
 
     Returns a list of document dictionaries.
 
     """
     url = 'https://api.anyfetch.com/documents'
-    r = requests.get('https://api.anyfetch.com/documents?search='+search, auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+    r = requests.get('https://api.anyfetch.com/documents?search=' + QUERY, auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     # Parse the JSON returned by pinboard and extract the posts
     result = r.json()
@@ -29,15 +31,17 @@ def main(wf):
     # import anothermodule
     # Get args from Workflow, already in normalised Unicode
     args = wf.args
-    query = args[0]
 
-    documents = get_documents(query);
+    global QUERY
+    QUERY= args[0]
+
+    documents = wf.cached_data(QUERY, get_documents, max_age=600);
 
 
 
     # Add items to Alfred feedback
     if len(documents) == 0:
-        wf.add_item('No results', 'We could not fetch any document for \'' + query + '\'')
+        wf.add_item('No results', 'We could not fetch any document for \'' + QUERY + '\'')
     else:
         for document in documents:
             type = document['document_type']['name'].capitalize()
