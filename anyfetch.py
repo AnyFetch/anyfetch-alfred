@@ -6,14 +6,14 @@ import sys
 from workflow import Workflow
 import requests
 
-def get_documents():
+def get_documents(search):
     """Retrieve documents from api.anyfetch.com
 
     Returns a list of document dictionaries.
 
     """
     url = 'https://api.anyfetch.com/documents'
-    r = requests.get('https://api.anyfetch.com/documents', auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+    r = requests.get('https://api.anyfetch.com/documents?search='+search, auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     # Parse the JSON returned by pinboard and extract the posts
     result = r.json()
@@ -29,18 +29,24 @@ def main(wf):
     # import anothermodule
     # Get args from Workflow, already in normalised Unicode
     args = wf.args
+    query = args[0]
 
-    documents = get_documents();
+    documents = get_documents(query);
+
+
 
     # Add items to Alfred feedback
-    for document in documents:
-        type = document['document_type']['name'].capitalize()
-        provider = document['provider']['client']['name']
-        wf.add_item(title=document['_type'],
-                         subtitle= type + ' from ' + provider,
-                         arg=document['identifier'],
-                         valid=True,
-                         icon='./icon.png')
+    if len(documents) == 0:
+        wf.add_item('No results', 'We could not fetch any document for \'' + query + '\'')
+    else:
+        for document in documents:
+            type = document['document_type']['name'].capitalize()
+            provider = document['provider']['client']['name']
+            wf.add_item(title=document['_type'],
+                             subtitle= type + ' from ' + provider,
+                             arg=document['identifier'],
+                             valid=True,
+                             icon='./icon.png')
 
 
     # Send output to Alfred
