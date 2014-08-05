@@ -3,7 +3,7 @@
 
 import sys
 
-from workflow import Workflow, web
+from workflow import Workflow
 import requests
 
 def get_documents():
@@ -34,7 +34,13 @@ def main(wf):
 
     # Add items to Alfred feedback
     for document in documents:
-        wf.add_item(document['id'], u'Item subtitle')
+        type = document['document_type']['name'].capitalize()
+        provider = document['provider']['client']['name']
+        wf.add_item(title=document['_type'],
+                         subtitle= type + ' from ' + provider,
+                         arg=document['identifier'],
+                         valid=True,
+                         icon='./icon.png')
 
 
     # Send output to Alfred
