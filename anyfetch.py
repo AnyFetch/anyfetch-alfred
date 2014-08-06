@@ -6,7 +6,7 @@ import re
 import os
 import requests
 
-from workflow import Workflow
+from workflow import Workflow, ICON_ERROR
 
 
 def get_documents(query):
@@ -20,11 +20,17 @@ def get_documents(query):
     env = os.getenv('ANYFETCH_ENV', 'api')
     token = os.getenv('ANYFETCH_TOKEN')
 
-    url = 'https://{0}.anyfetch.com/documents?search={1}'.format(env, query)
+    if token is None:
+        return None
+
+    url = 'https://{0}.anyfetch.com/documents?search={1}&render_templates=1'.format(env, query)
     headers = {
         'Authorization': 'token {0}'.format(token)
     }
     r = requests.get(url, headers=headers)
+
+    if r.status_code != 200:
+        return None
 
     return r.json()
 
@@ -39,47 +45,52 @@ def main(wf):
 
     json = wf.cached_data(query, lambda: get_documents(query), max_age=600)
 
-    documents = json['data']
+    if json is None:
+        wf.add_item(title='Invalid token',
+                    subtitle='Please provide a valid token in the workflow settings',
+                    arg=None,
+                    valid=True,
+                    icon=ICON_ERROR)
 
-    # Add items to Alfred feedback
-    if len(documents) == 0:
-        title = 'No results'
-        subtitle = 'We could not fetch any document for \'{0}\''.format(query)
-        wf.add_item(title, subtitle)
+        # Send output to Alfred
+        wf.send_feedback()
+
     else:
-        for document in documents:
-            type = document['document_type']['name']
-            provider = document['provider']['client']['name']
+        documents = json['data']
 
-            # TODO: rendered_title
-            title = 'Unknown'
-            if document['data'].get('title') is not None:
-                title = document['data']['title']
-            elif document['data'].get('subject') is not None:
-                title = document['data']['subject']
-            elif document['data'].get('name') is not None:
-                title = document['data']['name']
+        # Add items to Alfred feedback
+        if len(documents) == 0:
+            title = 'No results'
+            subtitle = 'We could not fetch any document for \'{0}\''.format(query)
+            wf.add_item(title, subtitle)
+        else:
+            for document in documents:
+                type = document['document_type']['name']
+                provider = document['provider']['client']['name']
 
-            title = html_escape(title)
+                # TODO: rendered_title
+                title = document.get('rendered_title')
 
-            action = None
-            if document['actions'].get('show') is not None:
-                action = document['actions']['show']
-            elif document['actions'].get('reply') is not None:
-                action = document['actions']['reply']
-            elif document['actions'].get('download') is not None:
-                action = document['actions']['download']
+                title = html_escape(title)
 
-            subtitle = '{0} from {1}'.format(type.capitalize(), provider)
+                action = None
+                if document['actions'].get('show') is not None:
+                    action = document['actions']['show']
+                elif document['actions'].get('reply') is not None:
+                    action = document['actions']['reply']
+                elif document['actions'].get('download') is not None:
+                    action = document['actions']['download']
 
-            wf.add_item(title=title,
-                        subtitle=subtitle,
-                        arg=action,
-                        valid=True,
-                        icon='./icons/{0}.png'.format(type))
+                subtitle = '{0} from {1}'.format(type.capitalize(), provider)
 
-    # Send output to Alfred
-    wf.send_feedback()
+                wf.add_item(title=title,
+                            subtitle=subtitle,
+                            arg=action,
+                            valid=True,
+                            icon='./icons/{0}.png'.format(type))
+
+        # Send output to Alfred
+        wf.send_feedback()
 
 if __name__ == '__main__':
     wf = Workflow()
