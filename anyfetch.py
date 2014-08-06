@@ -21,7 +21,9 @@ def get_documents(query):
     token = os.getenv('ANYFETCH_TOKEN')
 
     url = 'https://{0}.anyfetch.com/documents?search={1}'.format(env, query)
-    headers = {'Authorization': 'token {0}'.format(token)}
+    headers = {
+        'Authorization': 'token {0}'.format(token)
+    }
     r = requests.get(url, headers=headers)
 
     return r.json()
