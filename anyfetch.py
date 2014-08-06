@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys
+import sys, re
 import requests
 
 from workflow import Workflow
@@ -19,6 +19,9 @@ def get_documents(query):
                      auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
 
     return r.json()
+
+def html_escape(string):
+    return re.sub('<(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+>', '', string)
 
 
 def main(wf):
@@ -47,6 +50,8 @@ def main(wf):
                 title = document['data']['subject']
             elif document['data'].get('name') is not None:
                 title = document['data']['name']
+
+            title = html_escape(title)
 
             action = None
             if document['actions'].get('show') is not None:
