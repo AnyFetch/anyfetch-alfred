@@ -69,7 +69,6 @@ def main(wf):
                 type = document['document_type']['name']
                 provider = document['provider']['client']['name']
 
-                # TODO: rendered_title
                 title = document.get('rendered_title')
                 title = html_escape(title)
 
