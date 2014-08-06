@@ -23,11 +23,12 @@ def get_documents(query):
     if token is None:
         return None
 
-    url = 'https://{0}.anyfetch.com/documents?search={1}&render_templates=1'.format(env, query)
+    url = 'https://{0}.anyfetch.com/documents'
+    params = '?search={1}&render_templates=1'.format(env, query)
     headers = {
         'Authorization': 'token {0}'.format(token)
     }
-    r = requests.get(url, headers=headers)
+    r = requests.get(url+params, headers=headers)
 
     if r.status_code != 200:
         return None
@@ -47,7 +48,7 @@ def main(wf):
 
     if json is None:
         wf.add_item(title='Invalid token',
-                    subtitle='Please provide a valid token in the workflow settings',
+                    subtitle='Edit workflow to provide a valid token',
                     arg=None,
                     valid=True,
                     icon=ICON_ERROR)
@@ -61,7 +62,7 @@ def main(wf):
         # Add items to Alfred feedback
         if len(documents) == 0:
             title = 'No results'
-            subtitle = 'We could not fetch any document for \'{0}\''.format(query)
+            subtitle = 'Could not fetch any document for \'{0}\''.format(query)
             wf.add_item(title, subtitle)
         else:
             for document in documents:
@@ -70,7 +71,6 @@ def main(wf):
 
                 # TODO: rendered_title
                 title = document.get('rendered_title')
-
                 title = html_escape(title)
 
                 action = None
