@@ -43,16 +43,24 @@ def main(wf):
             title = 'Unknown'
             if document['data'].get('title') is not None:
                 title = document['data']['title']
-            elif document['data'].get('subject'):
+            elif document['data'].get('subject') is not None:
                 title = document['data']['subject']
-            elif document['data'].get('name'):
+            elif document['data'].get('name') is not None:
                 title = document['data']['name']
+
+            action = None
+            if document['actions'].get('show') is not None:
+                action = document['actions']['show']
+            elif document['actions'].get('reply') is not None:
+                action = document['actions']['reply']
+            elif document['actions'].get('download') is not None:
+                action = document['actions']['download']
 
             subtitle = '{0} from {1}'.format(type, provider)
 
             wf.add_item(title=title,
                         subtitle=subtitle,
-                        arg=document['identifier'],
+                        arg=action,
                         valid=True,
                         icon='./icon.png')
 
