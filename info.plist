@@ -19,17 +19,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>54B95EB4-EE42-4AD2-B116-B8887D4BE73A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>0B81253C-ADA0-41AE-B432-5056041FB608</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Tanguy Hélesbeux</string>
@@ -90,63 +79,15 @@ export ANYFETCH_ENV=api-staging
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>fetch:settings</string>
-				<key>subtext</key>
-				<string>Set token and environment</string>
-				<key>text</key>
-				<string>AnyFetch settings</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>54B95EB4-EE42-4AD2-B116-B8887D4BE73A</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>paths</key>
-				<array>
-					<string>/Applications/Alfred 2.app/Contents/Preferences/Alfred Preferences.app</string>
-				</array>
-				<key>toggle</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.launchfiles</string>
-			<key>uid</key>
-			<string>0B81253C-ADA0-41AE-B432-5056041FB608</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>0B81253C-ADA0-41AE-B432-5056041FB608</key>
-		<dict>
-			<key>ypos</key>
-			<real>130</real>
-		</dict>
 		<key>2873B983-23FE-4EEA-86B9-3F33D684C24E</key>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
-		</dict>
-		<key>54B95EB4-EE42-4AD2-B116-B8887D4BE73A</key>
-		<dict>
-			<key>ypos</key>
-			<real>130</real>
 		</dict>
 		<key>D3BBC21C-92EA-43FD-9C91-EA2998C8646F</key>
 		<dict>
