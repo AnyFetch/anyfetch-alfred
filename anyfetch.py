@@ -2,33 +2,94 @@
 # encoding: utf-8
 
 import sys
+import re
+import os
+import requests
 
-from workflow import Workflow, web
+from workflow import Workflow, ICON_ERROR
+
+
+def get_documents(query):
+    """
+    Retrieve documents from api.anyfetch.com
+
+    Returns a list of document dictionaries.
+
+    """
+
+    env = os.getenv('ANYFETCH_ENV', 'api')
+    token = os.getenv('ANYFETCH_TOKEN')
+
+    if token is None:
+        return None
+
+    url = 'https://{0}.anyfetch.com/documents'
+    params = '?search={1}&render_templates=1'.format(env, query)
+    headers = {
+        'Authorization': 'token {0}'.format(token)
+    }
+    r = requests.get(url+params, headers=headers)
+
+    if r.status_code != 200:
+        return None
+
+    return r.json()
+
+
+def html_escape(string):
+    return re.sub('<(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+>', '', string)
 
 
 def main(wf):
-    # The Workflow instance will be passed to the function
-    # you call from `Workflow.run`
-    # Your imports here if you want to catch import errors
-    # or if the modules/packages are in a directory added via `Workflow(libraries=...)`
-    # import somemodule
-    # import anothermodule
-    # Get args from Workflow, already in normalised Unicode
     args = wf.args
+    query = args[0]
 
-    # Do stuff here ...
+    json = wf.cached_data(query, lambda: get_documents(query), max_age=600)
 
-    json = web.get('https://localhost:3000/app/documents?data=%7B%22sessionId%22%3A%22fake_session_id%22%2C%22salesFetchURL%22%3A%22https%3A%2F%2Flocalhost%3A3000%22%2C%22instanceURL%22%3A%22https%3A%2F%2Feu0.salesforce.com%22%2C%22context%22%3A%7B%22templatedDisplay%22%3A%22Matthieu%20Bacconnier%22%2C%22templatedQuery%22%3A%22Matthieu%20Bacconnier%22%2C%22recordId%22%3A%220032000001DoV22AAF%22%2C%22recordType%22%3A%22Contact%22%7D%2C%22user%22%3A%7B%22id%22%3A%2200520000003RnlGAAS%22%2C%22name%22%3A%22mehdi%40anyfetch.com%22%2C%22email%22%3A%22tanguy.helesbeux%40insa-lyon.fr%22%7D%2C%22organization%22%3A%7B%22id%22%3A%2200D20000000lJVPEA2%22%2C%22name%22%3A%22AnyFetch%22%7D%2C%22hash%22%3A%22ZS5ZybJaJPiPAvPms9DNw4Nd2y0%3D%22%7D').json()
+    if json is None:
+        wf.add_item(title='Invalid token',
+                    subtitle='Edit workflow to provide a valid token',
+                    arg=None,
+                    valid=True,
+                    icon=ICON_ERROR)
 
-    documents = json['documents']['data']
+        # Send output to Alfred
+        wf.send_feedback()
 
-    # Add an item to Alfred feedback
-    for document in documents:
-        wf.add_item(document['id'], u'Item subtitle')
+    else:
+        documents = json['data']
 
-    # Send output to Alfred
-    wf.send_feedback()
+        # Add items to Alfred feedback
+        if len(documents) == 0:
+            title = 'No results'
+            subtitle = 'Could not fetch any document for \'{0}\''.format(query)
+            wf.add_item(title, subtitle)
+        else:
+            for document in documents:
+                type = document['document_type']['name']
+                provider = document['provider']['client']['name']
 
+                title = document.get('rendered_title')
+                title = html_escape(title)
+
+                action = None
+                if document['actions'].get('show') is not None:
+                    action = document['actions']['show']
+                elif document['actions'].get('reply') is not None:
+                    action = document['actions']['reply']
+                elif document['actions'].get('download') is not None:
+                    action = document['actions']['download']
+
+                subtitle = '{0} from {1}'.format(type.capitalize(), provider)
+
+                wf.add_item(title=title,
+                            subtitle=subtitle,
+                            arg=action,
+                            valid=True,
+                            icon='./icons/{0}.png'.format(type))
+
+        # Send output to Alfred
+        wf.send_feedback()
 
 if __name__ == '__main__':
     wf = Workflow()
