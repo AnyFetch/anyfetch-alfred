@@ -42,7 +42,11 @@
 				<key>runningsubtext</key>
 				<string>Fetching documents...</string>
 				<key>script</key>
-				<string>./anyfetch.py {query}</string>
+				<string>export ANYFETCH_USER=tanguyhelesbeux@gmail.com
+export ANYFETCH_PSWD=bitecouille
+export ANYFETCH_ENV=api-staging
+
+./anyfetch.py {query} </string>
 				<key>subtext</key>
 				<string>Find any document with AnyFetch</string>
 				<key>title</key>

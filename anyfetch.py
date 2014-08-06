@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys, re, requests
+import sys, re, os, requests
 
 from workflow import Workflow
 
@@ -14,9 +14,11 @@ def get_documents(query):
 
     """
 
-    r = requests.get('https://api.anyfetch.com/documents?search=' + query,
-                 auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
-
+    env = os.getenv('ANYFETCH_ENV')
+    user = os.getenv('ANYFETCH_USER')
+    pswd = os.getenv('ANYFETCH_PSWD')
+    r = requests.get('https://{0}.anyfetch.com/documents?search={1}'.format(env, query),
+                     auth=(user, pswd))
 
     return r.json()
 
