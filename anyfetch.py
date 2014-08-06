@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys, re, os, requests
+import sys
+import re
+import os
+import requests
 
 from workflow import Workflow
 
@@ -17,10 +20,12 @@ def get_documents(query):
     env = os.getenv('ANYFETCH_ENV', 'api')
     token = os.getenv('ANYFETCH_TOKEN')
 
-    r = requests.get('https://{0}.anyfetch.com/documents?search={1}'.format(env, query),
-                      headers={'Authorization': 'token {0}'.format(token)})
+    url = 'https://{0}.anyfetch.com/documents?search={1}'.format(env, query)
+    headers = {'Authorization': 'token {0}'.format(token)}
+    r = requests.get(url, headers=headers)
 
     return r.json()
+
 
 def html_escape(string):
     return re.sub('<(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+>', '', string)
