@@ -23,8 +23,8 @@ def get_documents(query):
     if token is None:
         return None
 
-    url = 'https://{0}.anyfetch.com/documents'
-    params = '?search={1}&render_templates=1'.format(env, query)
+    url = 'https://{0}.anyfetch.com/documents'.format(env)
+    params = '?search={0}&render_templates=1'.format(query)
     headers = {
         'Authorization': 'token {0}'.format(token)
     }
