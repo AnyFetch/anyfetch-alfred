@@ -42,8 +42,7 @@
 				<key>runningsubtext</key>
 				<string>Fetching documents...</string>
 				<key>script</key>
-				<string>export ANYFETCH_USER=tanguyhelesbeux@gmail.com
-export ANYFETCH_PSWD=bitecouille
+				<string>export ANYFETCH_TOKEN=&lt;your token&gt;
 export ANYFETCH_ENV=api-staging
 
 ./anyfetch.py {query} </string>

@@ -14,11 +14,11 @@ def get_documents(query):
 
     """
 
-    env = os.getenv('ANYFETCH_ENV')
-    user = os.getenv('ANYFETCH_USER')
-    pswd = os.getenv('ANYFETCH_PSWD')
+    env = os.getenv('ANYFETCH_ENV', 'api')
+    token = os.getenv('ANYFETCH_TOKEN')
+
     r = requests.get('https://{0}.anyfetch.com/documents?search={1}'.format(env, query),
-                     auth=(user, pswd))
+                      headers={'Authorization': 'token {0}'.format(token)})
 
     return r.json()
 
