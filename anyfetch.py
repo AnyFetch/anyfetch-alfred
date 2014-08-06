@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import sys, re
-import requests
+import sys, re, requests
 
 from workflow import Workflow
 
@@ -16,7 +15,8 @@ def get_documents(query):
     """
 
     r = requests.get('https://api.anyfetch.com/documents?search=' + query,
-                     auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+                 auth=('tanguyhelesbeux@gmail.com', 'bitecouille'))
+
 
     return r.json()
 
@@ -39,7 +39,7 @@ def main(wf):
         wf.add_item(title, subtitle)
     else:
         for document in documents:
-            type = document['document_type']['name'].capitalize()
+            type = document['document_type']['name']
             provider = document['provider']['client']['name']
 
             # TODO: rendered_title
@@ -61,13 +61,13 @@ def main(wf):
             elif document['actions'].get('download') is not None:
                 action = document['actions']['download']
 
-            subtitle = '{0} from {1}'.format(type, provider)
+            subtitle = '{0} from {1}'.format(type.capitalize(), provider)
 
             wf.add_item(title=title,
                         subtitle=subtitle,
                         arg=action,
                         valid=True,
-                        icon='./icon.png')
+                        icon='./icons/{0}.png'.format(type))
 
     # Send output to Alfred
     wf.send_feedback()
