@@ -5,6 +5,8 @@ import sys
 import re
 import os
 import requests
+from datetime import datetime
+import dateutil.parser
 
 from workflow import Workflow, ICON_ERROR
 
@@ -68,6 +70,7 @@ def main(wf):
             for document in documents:
                 type = document['document_type']['name']
                 provider = document['provider']['client']['name']
+                date = dateutil.parser.parse(document['creation_date'])
 
                 title = document.get('rendered_title')
                 title = html_escape(title)
@@ -80,7 +83,11 @@ def main(wf):
                 elif document['actions'].get('download') is not None:
                     action = document['actions']['download']
 
-                subtitle = '{0} from {1}'.format(type.capitalize(), provider)
+                subtitle = '{0} from {1}, {2}'.format(
+                    type.capitalize(),
+                    provider,
+                    date.strftime("%A, %d. %B %Y %I:%M%p")
+                )
 
                 wf.add_item(title=title,
                             subtitle=subtitle,
