@@ -59,7 +59,7 @@
 				<key>runningsubtext</key>
 				<string>Fetching documents...</string>
 				<key>script</key>
-				<string>export ANYFETCH_TOKEN=&lt;your token&gt;
+				<string>export ANYFETCH_TOKEN=your_token
 export ANYFETCH_ENV=api-staging
 
 ./anyfetch.py {query} </string>

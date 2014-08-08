@@ -6,7 +6,7 @@ import re
 import os
 import requests
 
-from workflow import Workflow, ICON_ERROR
+from workflow import Workflow, ICON_ERROR, ICON_ACCOUNT
 
 
 def get_documents(query):
@@ -63,7 +63,7 @@ def main(wf):
         if len(documents) == 0:
             title = 'No results'
             subtitle = 'Could not fetch any document for \'{0}\''.format(query)
-            wf.add_item(title, subtitle)
+            wf.add_item(title, subtitle, valid=False)
         else:
             for document in documents:
                 type = document['document_type']['name']
@@ -87,6 +87,12 @@ def main(wf):
                             arg=action,
                             valid=True,
                             icon='./icons/{0}.png'.format(type))
+
+        wf.add_item(title='Contact us',
+                    subtitle='Send an email to contact@anyfetch.com',
+                    arg='mailto:contact@anyfetch.com',
+                    valid=True,
+                    icon=ICON_ACCOUNT)
 
         # Send output to Alfred
         wf.send_feedback()
