@@ -19,6 +19,28 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>AEAB679F-1355-48E8-A0D1-D24D045E5418</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A84E46D0-397A-4D26-AE98-4E006A5D3122</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>EBE1BE23-625F-4B47-B195-CD5D75399AA7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A84E46D0-397A-4D26-AE98-4E006A5D3122</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Tanguy Hélesbeux</string>
@@ -30,23 +52,6 @@
 	<string>AnyFetch</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>plusspaces</key>
-				<false/>
-				<key>url</key>
-				<string>{query}</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>D3BBC21C-92EA-43FD-9C91-EA2998C8646F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -76,6 +81,94 @@
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>D3BBC21C-92EA-43FD-9C91-EA2998C8646F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>fetch:token</string>
+				<key>script</key>
+				<string>./set_settings.py token {query} </string>
+				<key>subtext</key>
+				<string>You can find your token on manager.anyfetch.com</string>
+				<key>title</key>
+				<string>Set AnyFetch token</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>EBE1BE23-625F-4B47-B195-CD5D75399AA7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>script</key>
+				<string>./settings.py {query}</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>A84E46D0-397A-4D26-AE98-4E006A5D3122</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>fetch:env</string>
+				<key>script</key>
+				<string>./set_settings.py env {query} </string>
+				<key>subtext</key>
+				<string>Use 'api' or 'api-staging'</string>
+				<key>title</key>
+				<string>Set AnyFetch environment</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>AEAB679F-1355-48E8-A0D1-D24D045E5418</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -86,10 +179,25 @@
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
+		<key>A84E46D0-397A-4D26-AE98-4E006A5D3122</key>
+		<dict>
+			<key>ypos</key>
+			<real>190</real>
+		</dict>
+		<key>AEAB679F-1355-48E8-A0D1-D24D045E5418</key>
+		<dict>
+			<key>ypos</key>
+			<real>250</real>
+		</dict>
 		<key>D3BBC21C-92EA-43FD-9C91-EA2998C8646F</key>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>EBE1BE23-625F-4B47-B195-CD5D75399AA7</key>
+		<dict>
+			<key>ypos</key>
+			<real>130</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>
