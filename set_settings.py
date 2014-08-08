@@ -5,6 +5,7 @@ import sys
 
 from workflow import Workflow
 
+
 def main(wf):
     key = wf.args[0]
     value = wf.args[1]
