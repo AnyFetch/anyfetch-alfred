@@ -3,7 +3,6 @@
 
 import sys
 import re
-import os
 import requests
 
 from workflow import Workflow, ICON_ERROR, ICON_ACCOUNT
@@ -70,10 +69,10 @@ def get_env():
 
 def send_invalid_token(wf):
     wf.add_item(title='Invalid token',
-                    subtitle='Edit workflow to provide a valid token',
-                    arg=None,
-                    valid=True,
-                    icon=ICON_ERROR)
+                subtitle='Edit workflow to provide a valid token',
+                arg=None,
+                valid=True,
+                icon=ICON_ERROR)
 
     # Send output to Alfred
     wf.send_feedback()
@@ -119,7 +118,6 @@ def send_documents(wf, query, documents):
     wf.send_feedback()
 
 
-
 def main(wf):
     args = wf.args
     query = args[0]
@@ -129,7 +127,8 @@ def main(wf):
     filter = filter[0] if len(filter) else None
 
     cacheKey = '{0}:{1}'.format(query, filter)
-    json = wf.cached_data(cacheKey, lambda: get_documents(query, filter), max_age=1)
+    fetcher = lambda: get_documents(query, filter)
+    json = wf.cached_data(cacheKey, fetcher, max_age=600)
 
     if json is None:
         send_invalid_token(wf)
