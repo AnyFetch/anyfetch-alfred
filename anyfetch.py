@@ -41,7 +41,7 @@ def get_documents(query, filter):
         'render_templates': 1
     }
     headers = {
-        'Authorization': 'token {0}'.format(token)
+        'Authorization': 'Bearer {0}'.format(token)
     }
 
 
@@ -67,11 +67,8 @@ def main(wf):
     query = args[0]
 
     words = query.split(' ')
-    wf.logger.debug(words)
-    wf.logger.debug(FILTER_KEYWORDS.keys())
     filter = [x for x in words if x in FILTER_KEYWORDS.keys()]
     filter = filter[0] if len(filter) else None
-    wf.logger.debug(filter)
 
     json = wf.cached_data(query, lambda: get_documents(query, filter), max_age=600)
 
