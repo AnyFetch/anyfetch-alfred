@@ -5,7 +5,7 @@ import sys
 import re
 import requests
 
-from workflow import Workflow, ICON_ERROR, ICON_ACCOUNT
+from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 
 FILTER_KEYWORDS = {
     'mail': '5252ce4ce4cfcd16f55cfa3f',
@@ -83,7 +83,7 @@ def send_documents(wf, query, documents):
     if len(documents) == 0:
         title = 'No results'
         subtitle = 'Could not fetch any document for \'{0}\''.format(query)
-        wf.add_item(title, subtitle, valid=False)
+        wf.add_item(title, subtitle, valid=False, icon='icons/icon.png')
     else:
         for document in documents:
             type = document['document_type']['name']
@@ -112,7 +112,7 @@ def send_documents(wf, query, documents):
                 subtitle='Send an email to contact@anyfetch.com',
                 arg='mailto:contact@anyfetch.com',
                 valid=True,
-                icon=ICON_ACCOUNT)
+                icon=ICON_CONTACT)
 
     # Send output to Alfred
     wf.send_feedback()

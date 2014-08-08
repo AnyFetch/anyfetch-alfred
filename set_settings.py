@@ -3,7 +3,7 @@
 
 import sys
 
-from workflow import Workflow, ICON_SETTINGS
+from workflow import Workflow
 
 def main(wf):
     key = wf.args[0]
@@ -15,7 +15,7 @@ def main(wf):
                 subtitle='Press ENTER to validate',
                 arg=arg,
                 valid=True,
-                icon=ICON_SETTINGS)
+                icon='icons/settings.png')
 
     # Send output to Alfred
     wf.send_feedback()
