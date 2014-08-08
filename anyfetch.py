@@ -10,7 +10,6 @@ from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 FILTER_KEYWORDS = {
     'mail': '5252ce4ce4cfcd16f55cfa3f',
     'email': '5252ce4ce4cfcd16f55cfa3f',
-    'PDF': '5252ce4ce4cfcd16f55cfa3c',
     'pdf': '5252ce4ce4cfcd16f55cfa3c',
     'image': '5252ce4ce4cfcd16f55cfa3d',
     'picture': '5252ce4ce4cfcd16f55cfa3d',
@@ -124,7 +123,7 @@ def main(wf):
     query = args[0]
 
     words = query.split(' ')
-    filter = [x for x in words if x in FILTER_KEYWORDS.keys()]
+    filter = [x.lower() for x in words if x.lower() in FILTER_KEYWORDS.keys()]
     filter = filter[0] if len(filter) else None
 
     cacheKey = '{0}:{1}'.format(query, filter)
