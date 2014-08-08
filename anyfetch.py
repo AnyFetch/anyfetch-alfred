@@ -8,8 +8,20 @@ import requests
 
 from workflow import Workflow, ICON_ERROR, ICON_ACCOUNT
 
+FILTER_KEYWORDS = {
+    'mail': '5252ce4ce4cfcd16f55cfa3f',
+    'email': '5252ce4ce4cfcd16f55cfa3f',
+    'PDF': '5252ce4ce4cfcd16f55cfa3c',
+    'pdf': '5252ce4ce4cfcd16f55cfa3c',
+    'image': '5252ce4ce4cfcd16f55cfa3d',
+    'picture': '5252ce4ce4cfcd16f55cfa3d',
+    'contact': '5252ce4ce4cfcd16f55cfa3a',
+    'event': '5252ce4ce4cfcd16f55cfa40',
+    'file': '5252ce4ce4cfcd16f55cfa3b'
+}
 
-def get_documents(query):
+
+def get_documents(query, filter):
     """
     Retrieve documents from api.anyfetch.com
 
@@ -24,11 +36,21 @@ def get_documents(query):
         return None
 
     url = 'https://{0}.anyfetch.com/documents'.format(env)
-    params = '?search={0}&render_templates=1'.format(query)
+    params = {
+        'search': query,
+        'render_templates': 1
+    }
     headers = {
         'Authorization': 'token {0}'.format(token)
     }
-    r = requests.get(url+params, headers=headers)
+
+
+    if filter is not None:
+        query = query[len(filter):]
+        params['document_type'] = FILTER_KEYWORDS[filter]
+
+
+    r = requests.get(url, headers=headers, params=params)
 
     if r.status_code != 200:
         return None
@@ -44,7 +66,14 @@ def main(wf):
     args = wf.args
     query = args[0]
 
-    json = wf.cached_data(query, lambda: get_documents(query), max_age=600)
+    words = query.split(' ')
+    wf.logger.debug(words)
+    wf.logger.debug(FILTER_KEYWORDS.keys())
+    filter = [x for x in words if x in FILTER_KEYWORDS.keys()]
+    filter = filter[0] if len(filter) else None
+    wf.logger.debug(filter)
+
+    json = wf.cached_data(query, lambda: get_documents(query, filter), max_age=600)
 
     if json is None:
         wf.add_item(title='Invalid token',
