@@ -28,7 +28,7 @@ def get_documents(query, filter):
 
     """
 
-    env = get_env()
+    env = get_env('api')
     token = get_token()
 
     if token is None:
@@ -63,8 +63,9 @@ def get_token():
     return wf.settings.get('token')
 
 
-def get_env():
-    return wf.settings.get('env')
+def get_env(default):
+    env = wf.settings.get('env')
+    return env if env is not None else default
 
 
 def send_invalid_token(wf):
