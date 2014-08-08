@@ -44,11 +44,9 @@ def get_documents(query, filter):
         'Authorization': 'Bearer {0}'.format(token)
     }
 
-
     if filter is not None:
         query = query[len(filter):]
         params['document_type'] = FILTER_KEYWORDS[filter]
-
 
     r = requests.get(url, headers=headers, params=params)
 
@@ -70,7 +68,8 @@ def main(wf):
     filter = [x for x in words if x in FILTER_KEYWORDS.keys()]
     filter = filter[0] if len(filter) else None
 
-    json = wf.cached_data(query, lambda: get_documents(query, filter), max_age=600)
+    cacheKey = '{0}:{1}'.format(query, filter)
+    json = wf.cached_data(cacheKey, lambda: get_documents(query, filter), max_age=600)
 
     if json is None:
         wf.add_item(title='Invalid token',
