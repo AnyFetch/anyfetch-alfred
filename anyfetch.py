@@ -4,7 +4,8 @@
 import sys
 import re
 import requests
-
+from datetime import datetime
+import dateutil.parser
 from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 
 FILTER_KEYWORDS = {
@@ -68,19 +69,19 @@ def get_env(default):
 
 
 def send_invalid_token(wf):
-    wf.add_item(title='Invalid token',
-                subtitle='Edit workflow to provide a valid token',
-                arg=None,
-                valid=True,
-                icon=ICON_ERROR)
+        wf.add_item(title='Invalid token',
+                    subtitle='Edit workflow to provide a valid token',
+                    arg=None,
+                    valid=True,
+                    icon=ICON_ERROR)
 
-    # Send output to Alfred
-    wf.send_feedback()
+        # Send output to Alfred
+        wf.send_feedback()
 
 
 def send_documents(wf, query, documents, filter):
-    # Add items to Alfred feedback
-    if len(documents) == 0:
+        # Add items to Alfred feedback
+        if len(documents) == 0:
         if filter is None:
             title = 'No results'
             subtitle = 'Could not fetch any document for \'{0}\''.format(query)
@@ -90,29 +91,34 @@ def send_documents(wf, query, documents, filter):
 
         wf.add_item(title, subtitle, valid=False, icon='icons/icon.png')
 
-    else:
-        for document in documents:
-            type = document['document_type']['name']
-            provider = document['provider']['client']['name']
+        else:
+            for document in documents:
+                type = document['document_type']['name']
+                provider = document['provider']['client']['name']
+                date = dateutil.parser.parse(document['creation_date'])
 
-            title = document.get('rendered_title')
-            title = html_escape(title)
+                title = document.get('rendered_title')
+                title = html_escape(title)
 
-            action = None
-            if document['actions'].get('show') is not None:
-                action = document['actions']['show']
-            elif document['actions'].get('reply') is not None:
-                action = document['actions']['reply']
-            elif document['actions'].get('download') is not None:
-                action = document['actions']['download']
+                action = None
+                if document['actions'].get('show') is not None:
+                    action = document['actions']['show']
+                elif document['actions'].get('reply') is not None:
+                    action = document['actions']['reply']
+                elif document['actions'].get('download') is not None:
+                    action = document['actions']['download']
 
-            subtitle = '{0} from {1}'.format(type.capitalize(), provider)
+                subtitle = '{0} from {1}, {2}'.format(
+                    type.capitalize(),
+                    provider,
+                    date.strftime("%A, %d. %B %Y %I:%M%p")
+                )
 
-            wf.add_item(title=title,
-                        subtitle=subtitle,
-                        arg=action,
-                        valid=True,
-                        icon='./icons/{0}.png'.format(type))
+                wf.add_item(title=title,
+                            subtitle=subtitle,
+                            arg=action,
+                            valid=True,
+                            icon='./icons/{0}.png'.format(type))
 
     wf.add_item(title='Contact us',
                 subtitle='Send an email to contact@anyfetch.com',
@@ -120,8 +126,8 @@ def send_documents(wf, query, documents, filter):
                 valid=True,
                 icon=ICON_CONTACT)
 
-    # Send output to Alfred
-    wf.send_feedback()
+        # Send output to Alfred
+        wf.send_feedback()
 
 
 def main(wf):
