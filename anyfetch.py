@@ -126,11 +126,11 @@ def send_documents(wf, query, documents, filter):
 
 def main(wf):
     args = wf.args
-    query = args[0]
+    query = wf.fold_to_ascii(args[0])
 
     words = query.split(' ')
     filter = [x.lower() for x in words if x.lower() in FILTER_KEYWORDS.keys()]
-    filter = filter[0] if len(filter) else None
+    filter = wf.fold_to_ascii(filter[0]) if len(filter) else None
 
     cacheKey = '{0}:{1}'.format(query, filter)
     fetcher = lambda: get_documents(query, filter)
