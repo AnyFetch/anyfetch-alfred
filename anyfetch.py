@@ -11,7 +11,7 @@ from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 FILTER_KEYWORDS = {
     'mail': '5252ce4ce4cfcd16f55cfa3f',
     'email': '5252ce4ce4cfcd16f55cfa3f',
-    'pdf': '5252ce4ce4cfcd16f55cfa3c',
+    'document': '5252ce4ce4cfcd16f55cfa3c',
     'image': '5252ce4ce4cfcd16f55cfa3d',
     'picture': '5252ce4ce4cfcd16f55cfa3d',
     'contact': '5252ce4ce4cfcd16f55cfa3a',
@@ -89,7 +89,8 @@ def send_documents(wf, query, documents, filter):
             title = 'Search for {0}s'.format(filter)
             subtitle = 'Only mails will be taken into account'
 
-        wf.add_item(title, subtitle, valid=False, icon='icons/icon.png')
+        iconPath = 'icons/{0}.png'.format(filter)
+        wf.add_item(title, subtitle, valid=False, icon=iconPath)
 
     else:
         for document in documents:
