@@ -78,12 +78,18 @@ def send_invalid_token(wf):
     wf.send_feedback()
 
 
-def send_documents(wf, query, documents):
+def send_documents(wf, query, documents, filter):
     # Add items to Alfred feedback
     if len(documents) == 0:
-        title = 'No results'
-        subtitle = 'Could not fetch any document for \'{0}\''.format(query)
+        if filter is None:
+            title = 'No results'
+            subtitle = 'Could not fetch any document for \'{0}\''.format(query)
+        else:
+            title = 'Search for {0}s'.format(filter)
+            subtitle = 'Only mails will be taken into account'
+
         wf.add_item(title, subtitle, valid=False, icon='icons/icon.png')
+
     else:
         for document in documents:
             type = document['document_type']['name']
@@ -134,7 +140,7 @@ def main(wf):
         send_invalid_token(wf)
     else:
         documents = json['data']
-        send_documents(wf, query, documents)
+        send_documents(wf, query, documents, filter)
 
 
 if __name__ == '__main__':
