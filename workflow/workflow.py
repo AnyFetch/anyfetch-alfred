@@ -79,6 +79,8 @@ ICON_WARNING = ('/System/Library/CoreServices/CoreTypes.bundle/Contents'
                 '/Resources/AlertCautionIcon.icns')
 ICON_WEB = ('/System/Library/CoreServices/CoreTypes.bundle/Contents'
             '/Resources/BookmarkIcon.icns')
+ICON_CONTACT = ('/System/Library/CoreServices/CoreTypes.bundle/Contents'
+            '/Resources/AlertNoteIcon.icns')
 
 ####################################################################
 # non-ASCII to ASCII diacritic folding.

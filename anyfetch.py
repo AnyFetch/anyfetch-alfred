@@ -3,15 +3,24 @@
 
 import sys
 import re
-import os
 import requests
 from datetime import datetime
 import dateutil.parser
+from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 
-from workflow import Workflow, ICON_ERROR
+FILTER_KEYWORDS = {
+    'mail': '5252ce4ce4cfcd16f55cfa3f',
+    'email': '5252ce4ce4cfcd16f55cfa3f',
+    'pdf': '5252ce4ce4cfcd16f55cfa3c',
+    'image': '5252ce4ce4cfcd16f55cfa3d',
+    'picture': '5252ce4ce4cfcd16f55cfa3d',
+    'contact': '5252ce4ce4cfcd16f55cfa3a',
+    'event': '5252ce4ce4cfcd16f55cfa40',
+    'file': '5252ce4ce4cfcd16f55cfa3b'
+}
 
 
-def get_documents(query):
+def get_documents(query, filter):
     """
     Retrieve documents from api.anyfetch.com
 
@@ -19,18 +28,26 @@ def get_documents(query):
 
     """
 
-    env = os.getenv('ANYFETCH_ENV', 'api')
-    token = os.getenv('ANYFETCH_TOKEN')
+    env = get_env('api')
+    token = get_token()
 
     if token is None:
         return None
 
     url = 'https://{0}.anyfetch.com/documents'.format(env)
-    params = '?search={0}&render_templates=1'.format(query)
-    headers = {
-        'Authorization': 'token {0}'.format(token)
+    params = {
+        'search': query,
+        'render_templates': 1
     }
-    r = requests.get(url+params, headers=headers)
+    headers = {
+        'Authorization': 'Bearer {0}'.format(token)
+    }
+
+    if filter is not None:
+        params['search'] = query[len(filter):]
+        params['document_type'] = [FILTER_KEYWORDS[filter]]
+
+    r = requests.get(url, headers=headers, params=params)
 
     if r.status_code != 200:
         return None
@@ -42,13 +59,16 @@ def html_escape(string):
     return re.sub('<(?:"[^"]*"[\'"]*|\'[^\']*\'[\'"]*|[^\'">])+>', '', string)
 
 
-def main(wf):
-    args = wf.args
-    query = args[0]
+def get_token():
+    return wf.settings.get('token')
 
-    json = wf.cached_data(query, lambda: get_documents(query), max_age=600)
 
-    if json is None:
+def get_env(default):
+    env = wf.settings.get('env')
+    return env if env is not None else default
+
+
+def send_invalid_token(wf):
         wf.add_item(title='Invalid token',
                     subtitle='Edit workflow to provide a valid token',
                     arg=None,
@@ -58,14 +78,19 @@ def main(wf):
         # Send output to Alfred
         wf.send_feedback()
 
-    else:
-        documents = json['data']
 
+def send_documents(wf, query, documents, filter):
         # Add items to Alfred feedback
         if len(documents) == 0:
+        if filter is None:
             title = 'No results'
             subtitle = 'Could not fetch any document for \'{0}\''.format(query)
-            wf.add_item(title, subtitle)
+        else:
+            title = 'Search for {0}s'.format(filter)
+            subtitle = 'Only mails will be taken into account'
+
+        wf.add_item(title, subtitle, valid=False, icon='icons/icon.png')
+
         else:
             for document in documents:
                 type = document['document_type']['name']
@@ -95,8 +120,34 @@ def main(wf):
                             valid=True,
                             icon='./icons/{0}.png'.format(type))
 
+    wf.add_item(title='Contact us',
+                subtitle='Send an email to contact@anyfetch.com',
+                arg='mailto:contact@anyfetch.com',
+                valid=True,
+                icon=ICON_CONTACT)
+
         # Send output to Alfred
         wf.send_feedback()
+
+
+def main(wf):
+    args = wf.args
+    query = wf.fold_to_ascii(args[0])
+
+    words = query.split(' ')
+    filter = [x.lower() for x in words if x.lower() in FILTER_KEYWORDS.keys()]
+    filter = wf.fold_to_ascii(filter[0]) if len(filter) else None
+
+    cacheKey = '{0}:{1}'.format(query, filter)
+    fetcher = lambda: get_documents(query, filter)
+    json = wf.cached_data(cacheKey, fetcher, max_age=600)
+
+    if json is None:
+        send_invalid_token(wf)
+    else:
+        documents = json['data']
+        send_documents(wf, query, documents, filter)
+
 
 if __name__ == '__main__':
     wf = Workflow()
