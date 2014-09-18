@@ -38,7 +38,7 @@ def get_documents(query, filter):
     params = {
         'search': query,
         'render_templates': 1,
-        'sort': 'modificationDate'
+        'sort': '-modificationDate'
     }
     headers = {
         'Authorization': 'Bearer {0}'.format(token)
