@@ -10,7 +10,7 @@ from workflow import Workflow, ICON_ERROR, ICON_CONTACT
 
 FILTER_KEYWORDS = {
     'mail': '5252ce4ce4cfcd16f55cfa3f',
-    'email': '5252ce4ce4cfcd16f55cfa3f',
+    'mail': '656d61696c2d746872656164',
     'document': '5252ce4ce4cfcd16f55cfa3c',
     'image': '5252ce4ce4cfcd16f55cfa3d',
     'picture': '5252ce4ce4cfcd16f55cfa3d',
