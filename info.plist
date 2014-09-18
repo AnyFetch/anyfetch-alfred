@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string>anyfetch</string>
+	<string>com.anyfetch.alfred</string>
 	<key>connections</key>
 	<dict>
 		<key>2873B983-23FE-4EEA-86B9-3F33D684C24E</key>
@@ -43,13 +43,13 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Tanguy Hélesbeux</string>
+	<string>Anyfetch</string>
 	<key>description</key>
-	<string></string>
+	<string>Search in AnyFetch from Alfred</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>AnyFetch</string>
+	<string>AnyFetch for Alfred</string>
 	<key>objects</key>
 	<array>
 		<dict>
