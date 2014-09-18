@@ -37,7 +37,8 @@ def get_documents(query, filter):
     url = 'https://{0}.anyfetch.com/documents'.format(env)
     params = {
         'search': query,
-        'render_templates': 1
+        'render_templates': 1,
+        'sort': 'modificationDate'
     }
     headers = {
         'Authorization': 'Bearer {0}'.format(token)
